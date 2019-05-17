@@ -15,9 +15,9 @@ module Geo
 
       LibRay.draw_cube(
         position: @camera.target,
-        width: 3,
-        height: 3,
-        length: 3,
+        width: 1,
+        height: 1,
+        length: 1,
         color: LibRay::GREEN
       )
 
