@@ -1,14 +1,12 @@
 module Geo
   class World
     def initialize
-      @camera = Camera.new
-
-      # Note: length is spelled wrong in bindings:
-      target_mesh = LibRay.gen_mesh_cube(width: 1, height: 1, lenght: 1)
-      @target_model = LibRay.load_model_from_mesh(target_mesh)
+      @player = Player.new
+      @camera = Camera.new(@player)
     end
 
     def update
+      @player.update
       @camera.update
     end
 
@@ -17,14 +15,7 @@ module Geo
 
       LibRay.draw_grid(100, 1)
 
-      LibRay.draw_model_ex(
-        model: @target_model,
-        position: @camera.target,
-        rotation_axis: LibRay::Vector3.new(x: 0, y: 1, z: 0),
-        rotation_angle: @camera.rotation_angle,
-        scale: LibRay::Vector3.new(x: 1, y: 1, z: 3),
-        tint: LibRay::GREEN
-      )
+      @player.draw
 
       LibRay.end_3d_mode
     end
