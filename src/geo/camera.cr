@@ -16,6 +16,7 @@ module Geo
       frame_time = LibRay.get_frame_time
 
       forward_delta = 0
+      strafe_delta = 0
       rotation_delta = 0
 
       rotation_delta = -1 if LibRay.key_down?(LibRay::KEY_Q)
@@ -24,13 +25,25 @@ module Geo
       forward_delta = 1 if LibRay.key_down?(LibRay::KEY_UP) || LibRay.key_down?(LibRay::KEY_W)
       forward_delta = -1 if LibRay.key_down?(LibRay::KEY_DOWN) || LibRay.key_down?(LibRay::KEY_S)
 
+      strafe_delta = 1 if LibRay.key_down?(LibRay::KEY_LEFT) || LibRay.key_down?(LibRay::KEY_A)
+      strafe_delta = -1 if LibRay.key_down?(LibRay::KEY_RIGHT) || LibRay.key_down?(LibRay::KEY_D)
+
       @rotation_angle += -100 * rotation_delta * frame_time if rotation_delta != 0
 
-      distance = 0
-      distance += 10 * forward_delta * frame_time
+      if forward_delta != 0
+        distance = 10 * forward_delta * frame_time
 
-      @target.z += distance * Math.cos(@rotation_angle * (Math::PI / 180.0))
-      @target.x += distance * Math.sin(@rotation_angle * (Math::PI / 180.0))
+        @target.z += distance * Math.cos(@rotation_angle * (Math::PI / 180.0))
+        @target.x += distance * Math.sin(@rotation_angle * (Math::PI / 180.0))
+      end
+
+      if strafe_delta != 0
+        distance = 10 * strafe_delta.abs * frame_time
+        angle_with_strafe = (@rotation_angle + strafe_delta * 90)
+
+        @target.z += distance * Math.cos(angle_with_strafe * (Math::PI / 180.0))
+        @target.x += distance * Math.sin(angle_with_strafe * (Math::PI / 180.0))
+      end
 
       update_camera
     end
