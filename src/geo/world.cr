@@ -14,7 +14,7 @@ module Geo
       LibRay.draw_grid(100, 0.5)
 
       LibRay.draw_cube(
-        position: LibRay::Vector3.new(x: 0, y: 0, z: 0),
+        position: @camera.target,
         width: 3,
         height: 3,
         length: 3,
