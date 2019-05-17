@@ -24,6 +24,9 @@ module Geo
       @target.z += 10 * vert * frame_time if vert != 0
       @target.x += 10 * horz * frame_time if horz != 0
 
+      @position.z += 10 * vert * frame_time if vert != 0
+      @position.x += 10 * horz * frame_time if horz != 0
+
       update_camera
     end
 
@@ -34,6 +37,8 @@ module Geo
         up: @up,
         fovy: @fovy
       )
+
+      LibRay.update_camera(pointerof(@camera))
     end
 
     def begin_3d_mode
