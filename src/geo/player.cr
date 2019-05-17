@@ -1,5 +1,6 @@
 module Geo
   class Player
+    getter height : LibC::Float
     getter rotation : LibC::Float
 
     target_model : LibRay::Model
@@ -7,14 +8,14 @@ module Geo
     FORWARD_SPEED  =   15
     STRAFE_SPEED   =   10
     ROTATION_SPEED =  100
-    JUMP_SPEED     =  125
+    JUMP_SPEED     =  150
     JUMP_TIMER     = 0.25
     GRAVITY        =   10
 
     def initialize
-      @width = 1
-      @height = 1
-      @length = 1
+      @width = 5
+      @height = 10
+      @length = 5
 
       target_mesh = LibRay.gen_mesh_cube(
         width: @width,
@@ -24,7 +25,7 @@ module Geo
       )
       @target_model = LibRay.load_model_from_mesh(target_mesh)
 
-      @position = LibRay::Vector3.new
+      @position = LibRay::Vector3.new(x: 0, y: 0, z: 0)
       @rotation = 0
       @jump_timer = Timer.new(JUMP_TIMER)
     end
@@ -32,7 +33,7 @@ module Geo
     def camera_target
       LibRay::Vector3.new(
         x: @position.x,
-        y: @height,
+        y: @height / 2,
         z: @position.z
       )
     end
@@ -90,7 +91,7 @@ module Geo
     end
 
     def jump(frame_time)
-      @jump_timer.restart if !@jump_timer.active? && LibRay.key_pressed?(LibRay::KEY_SPACE) && @position.y <= 0
+      @jump_timer.restart if grounded? && !@jump_timer.active? && LibRay.key_pressed?(LibRay::KEY_SPACE)
 
       if @jump_timer.active?
         @jump_timer.increase(frame_time)
@@ -101,11 +102,15 @@ module Geo
     end
 
     def gravity(frame_time)
-      if @position.y > 0
-        @position.y -= GRAVITY * GRAVITY * frame_time
+      if grounded?
+        @position.y = @height / 2
       else
-        @position.y = 0
+        @position.y -= GRAVITY * GRAVITY * frame_time
       end
+    end
+
+    def grounded?
+      @position.y < @height / 2 + 0.1
     end
 
     def draw

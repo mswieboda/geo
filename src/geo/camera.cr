@@ -2,19 +2,19 @@ module Geo
   class Camera
     property player : Player
 
-    CAMERA_DISTANCE = 20
+    @distance : LibC::Float
 
     def initialize(@player)
-      @position = LibRay::Vector3.new(x: 0, y: 20, z: 0)
+      @distance = @player.height * 3
+      @position = LibRay::Vector3.new(x: 0, y: @player.height * 1.25, z: 0)
       @up = LibRay::Vector3.new(x: 0, y: 1, z: 0)
       @fovy = 45
       @camera = LibRay::Camera.new
-      @rotation_angle = 0
     end
 
     def update
-      @position.z = @player.camera_target.z - CAMERA_DISTANCE * Math.cos(@player.rotation * (Math::PI / 180.0))
-      @position.x = @player.camera_target.x - CAMERA_DISTANCE * Math.sin(@player.rotation * (Math::PI / 180.0))
+      @position.z = @player.camera_target.z - @distance * Math.cos(@player.rotation * (Math::PI / 180.0))
+      @position.x = @player.camera_target.x - @distance * Math.sin(@player.rotation * (Math::PI / 180.0))
 
       @camera = LibRay::Camera.new(
         position: @position,
