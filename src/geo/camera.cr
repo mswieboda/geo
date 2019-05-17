@@ -4,8 +4,8 @@ module Geo
     getter rotation_angle : LibC::Float
 
     def initialize
-      @position = LibRay::Vector3.new(x: 10, y: 20, z: 20)
-      @target = LibRay::Vector3.new(x: 0, y: 0, z: 0)
+      @position = LibRay::Vector3.new(x: -10, y: 20, z: -20)
+      @target = LibRay::Vector3.new(x: 0, y: 0, z: 10)
       @up = LibRay::Vector3.new(x: 0, y: 1, z: 0)
       @fovy = 45
       @camera = LibRay::Camera.new
@@ -15,28 +15,22 @@ module Geo
     def update
       frame_time = LibRay.get_frame_time
 
-      z_delta = 0
-      x_delta = 0
-      r_delta = 0
+      forward_delta = 0
+      rotation_delta = 0
 
-      r_delta = -1 if LibRay.key_down?(LibRay::KEY_Q)
-      r_delta = 1 if LibRay.key_down?(LibRay::KEY_E)
+      rotation_delta = -1 if LibRay.key_down?(LibRay::KEY_Q)
+      rotation_delta = 1 if LibRay.key_down?(LibRay::KEY_E)
 
-      z_delta = -1 if LibRay.key_down?(LibRay::KEY_UP) || LibRay.key_down?(LibRay::KEY_W)
-      z_delta = 1 if LibRay.key_down?(LibRay::KEY_DOWN) || LibRay.key_down?(LibRay::KEY_S)
+      forward_delta = 1 if LibRay.key_down?(LibRay::KEY_UP) || LibRay.key_down?(LibRay::KEY_W)
+      forward_delta = -1 if LibRay.key_down?(LibRay::KEY_DOWN) || LibRay.key_down?(LibRay::KEY_S)
 
-      x_delta = -1 if LibRay.key_down?(LibRay::KEY_LEFT) || LibRay.key_down?(LibRay::KEY_A)
-      x_delta = 1 if LibRay.key_down?(LibRay::KEY_RIGHT) || LibRay.key_down?(LibRay::KEY_D)
+      @rotation_angle += -100 * rotation_delta * frame_time if rotation_delta != 0
 
-      @rotation_angle += -100 * r_delta * frame_time if r_delta != 0
+      distance = 0
+      distance += 10 * forward_delta * frame_time
 
-      puts @rotation_angle
-
-      @target.z += 10 * z_delta * frame_time if z_delta != 0
-      @target.x += 10 * x_delta * frame_time if x_delta != 0
-
-      @position.z += 10 * z_delta * frame_time if z_delta != 0
-      @position.x += 10 * x_delta * frame_time if x_delta != 0
+      @target.z += distance * Math.cos(@rotation_angle * (Math::PI / 180.0))
+      @target.x += distance * Math.sin(@rotation_angle * (Math::PI / 180.0))
 
       update_camera
     end

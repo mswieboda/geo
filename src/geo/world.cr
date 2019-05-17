@@ -22,7 +22,7 @@ module Geo
         position: @camera.target,
         rotation_axis: LibRay::Vector3.new(x: 0, y: 1, z: 0),
         rotation_angle: @camera.rotation_angle,
-        scale: LibRay::Vector3.new(x: 3, y: 1, z: 1),
+        scale: LibRay::Vector3.new(x: 1, y: 1, z: 3),
         tint: LibRay::GREEN
       )
 
