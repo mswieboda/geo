@@ -13,12 +13,12 @@ module Geo
     end
 
     def update
-      @position.z = @player.position.z - CAMERA_DISTANCE * Math.cos(@player.rotation * (Math::PI / 180.0))
-      @position.x = @player.position.x - CAMERA_DISTANCE * Math.sin(@player.rotation * (Math::PI / 180.0))
+      @position.z = @player.camera_target.z - CAMERA_DISTANCE * Math.cos(@player.rotation * (Math::PI / 180.0))
+      @position.x = @player.camera_target.x - CAMERA_DISTANCE * Math.sin(@player.rotation * (Math::PI / 180.0))
 
       @camera = LibRay::Camera.new(
         position: @position,
-        target: @player.position,
+        target: @player.camera_target,
         up: @up,
         fovy: @fovy
       )

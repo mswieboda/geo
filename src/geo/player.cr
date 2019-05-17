@@ -1,6 +1,5 @@
 module Geo
   class Player
-    getter position : LibRay::Vector3
     getter rotation : LibC::Float
 
     target_model : LibRay::Model
@@ -13,13 +12,29 @@ module Geo
     GRAVITY        =   10
 
     def initialize
-      # Note: length is spelled wrong in bindings:
-      target_mesh = LibRay.gen_mesh_cube(width: 1, height: 1, lenght: 1)
+      @width = 1
+      @height = 1
+      @length = 1
+
+      target_mesh = LibRay.gen_mesh_cube(
+        width: @width,
+        height: @height,
+        # TODO: tell cray developer binding key "lenght" is typo:
+        lenght: @length
+      )
       @target_model = LibRay.load_model_from_mesh(target_mesh)
 
       @position = LibRay::Vector3.new
       @rotation = 0
       @jump_timer = Timer.new(JUMP_TIMER)
+    end
+
+    def camera_target
+      LibRay::Vector3.new(
+        x: @position.x,
+        y: @height,
+        z: @position.z
+      )
     end
 
     def update
@@ -99,7 +114,7 @@ module Geo
         position: @position,
         rotation_axis: LibRay::Vector3.new(x: 0, y: 1, z: 0),
         rotation_angle: @rotation,
-        scale: LibRay::Vector3.new(x: 1, y: 1, z: 3),
+        scale: LibRay::Vector3.new(x: 1, y: 1, z: 1),
         tint: LibRay::GREEN
       )
     end
