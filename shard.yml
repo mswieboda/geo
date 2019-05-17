@@ -1,0 +1,13 @@
+name: geo
+version: 0.1.0
+
+authors:
+  - Matt Swieboda <mswiebod@gmail.com>
+
+targets:
+  geo:
+    main: src/geo.cr
+
+crystal: 0.27.2
+
+license: MIT
