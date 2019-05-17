@@ -11,6 +11,7 @@ module Geo
     def initialize
       LibRay.init_window(SCREEN_WIDTH, SCREEN_HEIGHT, "Geo")
       LibRay.set_target_fps(TARGET_FPS)
+      @world = World.new
     end
 
     def run
@@ -23,9 +24,12 @@ module Geo
     end
 
     def update
+      @world.update
     end
 
     def draw
+      @world.draw
+
       LibRay.draw_fps(0, 0) if DRAW_FPS
     end
 
