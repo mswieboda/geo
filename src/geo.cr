@@ -1,6 +1,10 @@
-# TODO: Write documentation for `Geo`
-module Geo
-  VERSION = "0.1.0"
+require "cray"
+require "./geo/*"
 
-  # TODO: Put your code here
+module Geo
+  def self.run
+    Game.new.run
+  end
 end
+
+Geo.run
