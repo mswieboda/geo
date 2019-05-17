@@ -5,9 +5,12 @@ module Geo
 
     target_model : LibRay::Model
 
-    FORWARD_SPEED  =  15
-    STRAFE_SPEED   =  10
-    ROTATION_SPEED = 100
+    FORWARD_SPEED  =   15
+    STRAFE_SPEED   =   10
+    ROTATION_SPEED =  100
+    JUMP_SPEED     =  125
+    JUMP_TIMER     = 0.25
+    GRAVITY        =   10
 
     def initialize
       # Note: length is spelled wrong in bindings:
@@ -16,12 +19,15 @@ module Geo
 
       @position = LibRay::Vector3.new
       @rotation = 0
+      @jump_timer = Timer.new(JUMP_TIMER)
     end
 
     def update
       frame_time = LibRay.get_frame_time
 
       movement(frame_time)
+      jump(frame_time)
+      gravity(frame_time)
     end
 
     def movement(frame_time)
@@ -65,6 +71,25 @@ module Geo
 
         @position.z += distance * Math.cos(angle_with_strafe * (Math::PI / 180.0))
         @position.x += distance * Math.sin(angle_with_strafe * (Math::PI / 180.0))
+      end
+    end
+
+    def jump(frame_time)
+      @jump_timer.restart if !@jump_timer.active? && LibRay.key_pressed?(LibRay::KEY_SPACE) && @position.y <= 0
+
+      if @jump_timer.active?
+        @jump_timer.increase(frame_time)
+        @position.y += JUMP_SPEED * frame_time
+
+        @jump_timer.reset if @jump_timer.done?
+      end
+    end
+
+    def gravity(frame_time)
+      if @position.y > 0
+        @position.y -= GRAVITY * GRAVITY * frame_time
+      else
+        @position.y = 0
       end
     end
 
