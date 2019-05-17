@@ -13,9 +13,9 @@ module Geo
     GRAVITY        =   10
 
     def initialize
-      @width = 5
-      @height = 10
-      @length = 5
+      @width = 3
+      @height = 7
+      @length = 3
 
       target_mesh = LibRay.gen_mesh_cube(
         width: @width,
