@@ -15,7 +15,7 @@ module Geo
     def draw
       @camera.begin_3d_mode
 
-      LibRay.draw_grid(100, 0.5)
+      LibRay.draw_grid(100, 1)
 
       LibRay.draw_model_ex(
         model: @target_model,
